@@ -2,7 +2,10 @@ package main
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"io/ioutil"
 	"log"
+	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -42,14 +45,17 @@ func main() {
 				msg.Text = "I don't know that command"
 			}
 			bot.Send(msg)
-		}else if strings.ContainsAny(update.Message.Text, "#ASK"){
+		}else if strings.ContainsAny(update.Message.Text, "func"){
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
-			msg.Text = "iya " + update.Message.From.FirstName + ", ada apa?"
-			bot.Send(msg)
-		}else{
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "maksudnya?")
+			message := []byte(update.Message.Text)
+			ioutil.WriteFile("livetest.go", message, os.ModePerm)
+			out, err := exec.Command("go", "run", "livetest.go").Output()
+			if err != nil{
+				msg.Text = "sintax error"
+			}else{
+				msg.Text = "outputnya adalah " + string(out)
+			}
 			bot.Send(msg)
 		}
-
+		}
 	}
-}
