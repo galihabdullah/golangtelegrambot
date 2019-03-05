@@ -21,7 +21,7 @@ func main() {
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert("https://www.google.com:8443/"+bot.Token, "cert.pem"))
+	_, err = bot.SetWebhook(tgbotapi.NewWebhookWithCert("https://inlaid-vehicle-233108.appspot.com/"+bot.Token, "cert.pem"))
 	if err != nil {
 		log.Fatal(err)
 	}
