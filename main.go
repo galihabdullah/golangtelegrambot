@@ -11,7 +11,7 @@ import (
 
 
 func main() {
-	bot, err := tgbotapi.NewBotAPI("MyAwesomeBotToken")
+	bot, err := tgbotapi.NewBotAPI("653629960:AAFizrqn043ird_bXJpMZmkDCtpSjyWfmDA")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -31,20 +31,11 @@ func main() {
 		}
 
 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
-
 		if strings.ContainsAny(update.Message.Text, "func"){
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 			message := []byte(update.Message.Text)
-			tmpFile, err := ioutil.TempFile("","example.go")
-			if err != nil{
-				log.Printf(err.Error())
-			}
-			defer os.Remove(tmpFile.Name())
-
-			if _, err = tmpFile.Write(message); err != nil{
-				log.Printf(err.Error())
-			}
-			out, err := exec.Command("go", "run", "example.go").Output()
+			ioutil.WriteFile("livetest.go", message, os.ModePerm)
+			out, err := exec.Command("go", "run", "livetest.go").Output()
 			if err != nil{
 				msg.Text = err.Error()
 			}else{
@@ -52,9 +43,6 @@ func main() {
 			}
 			bot.Send(msg)
 			log.Printf("To: %+v Text: %+v\n",msg.ReplyToMessageID, msg.Text)
-			if err := tmpFile.Close(); err != nil{
-				log.Printf(err.Error())
-			}
 		}
 	}
 }
